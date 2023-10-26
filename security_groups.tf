@@ -1,7 +1,7 @@
 locals {
     restricted_ports = flatten([for restricted_port in var.restricted_ports: [
         for group_id in restricted_port.group_ids: {
-            port = restricted_port
+            port = restricted_port.port
             group_id = group_id
         }
     ]])
@@ -108,34 +108,4 @@ resource "openstack_networking_secgroup_rule_v2" "metrics_server_icmp_access_v6"
   protocol          = "ipv6-icmp"
   remote_group_id   = each.value
   security_group_id = openstack_networking_secgroup_v2.transport_load_balancer.id
-}
-
-//Grant the lb access to the fluentd port and icmp on a fluentd node
-resource "openstack_networking_secgroup_rule_v2" "lb_tcp_access_fluentd" {
-  count             = var.fluentd_security_group.id != "" ? 1 : 0
-  direction         = "ingress"
-  ethertype         = "IPv4"
-  protocol          = "tcp"
-  port_range_min    = var.fluentd_security_group.port
-  port_range_max    = var.fluentd_security_group.port
-  remote_group_id   = openstack_networking_secgroup_v2.transport_load_balancer.id
-  security_group_id = var.fluentd_security_group.id
-}
-
-resource "openstack_networking_secgroup_rule_v2" "lb_icmp_access_v4" {
-  count             = var.fluentd_security_group.id != "" ? 1 : 0
-  direction         = "ingress"
-  ethertype         = "IPv4"
-  protocol          = "icmp"
-  remote_group_id   = openstack_networking_secgroup_v2.transport_load_balancer.id
-  security_group_id = var.fluentd_security_group.id
-}
-
-resource "openstack_networking_secgroup_rule_v2" "lb_icmp_access_v6" {
-  count             = var.fluentd_security_group.id != "" ? 1 : 0
-  direction         = "ingress"
-  ethertype         = "IPv6"
-  protocol          = "ipv6-icmp"
-  remote_group_id   = openstack_networking_secgroup_v2.transport_load_balancer.id
-  security_group_id = var.fluentd_security_group.id
 }

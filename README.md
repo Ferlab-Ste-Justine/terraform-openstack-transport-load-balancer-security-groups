@@ -22,10 +22,7 @@ The module takes the following variables as input:
 - **restricted_ports**: List of ports accessible only to certain security groups. Each entry in the list should have the following keys:
   - **port**: Port that is made accessible
   - **group_ids**: List of security group ids that should have access to the port
-- **fluentd_security_group**: Optional fluentd security group configuration. It has the following keys:
-  - **id**: Id of pre-existing security group to add fluentd rules to
-  - **port**: Port the remote fluentd node listens on
-
+  
 ## Output
 
 The module outputs the following variables as output:
