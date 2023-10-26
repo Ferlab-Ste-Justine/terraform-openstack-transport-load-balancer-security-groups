@@ -70,7 +70,7 @@ resource "openstack_networking_secgroup_rule_v2" "external_port_access" {
 
 //Allow ports accessible only by clients
 resource "openstack_networking_secgroup_rule_v2" "restricted_port_access" {
-  for_each          = { for restricted_port in local.restricted_ports: "${restricted_port.group_id}-${restricted_port.port}" => restricted_port }
+  for_each          = { for idx, restricted_port in local.restricted_ports: "group-idx-${idx}-port-${restricted_port.port}" => restricted_port }
   direction         = "ingress"
   ethertype         = "IPv4"
   protocol          = "tcp"
